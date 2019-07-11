@@ -25,8 +25,12 @@
         <el-row 
         type="flex" 
         class="search-tab">
-            <span>            
-                <i>攻略</i>
+            <span
+            v-for="(item, index) in tabs"
+            :key="index"
+            @click="handleClick(index)"
+            :class="{ active: current === index }">            
+                <i>{{item.title}}</i>
             </span>
         </el-row>
         
@@ -36,7 +40,7 @@
         align="middle" 
         class="search-input">
             <input 
-            placeholder="搜索城市"/>
+            :placeholder="tabs[current].placeholder"/>
             <i class="el-icon-search"></i>
         </el-row>
       </div>
@@ -49,7 +53,30 @@ export default {
   data(){
     return {
       // 轮播图
-      banners: []
+      banners: [],
+
+      // 搜索栏数据
+      tabs: [
+        { title: "攻略", placeholder: "搜素城市" },
+        { title: "酒店", placeholder: "请输入城市搜索酒店" },
+        { title: "机票", placeholder: "" }
+      ],
+
+      // 当前的显示索引
+      current: 0
+    }
+  },
+
+  methods: {
+    // 切换tab栏时候触发
+    handleClick(index){
+
+      if(index === 2){
+        this.$router.push("/air");
+      }
+
+
+      this.current = index;
     }
   },
 

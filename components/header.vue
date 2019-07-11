@@ -18,11 +18,24 @@
 
             <!-- 登录信息 -->
             <div>
-                <div>
+                <div v-if="false">
                     <nuxt-link to="/user/login">登录 / 注册</nuxt-link>
                 </div>
 
-                <div v-if="false"></div>
+                <div>
+                    <el-dropdown>
+                        <span class="el-dropdown-link">
+                            <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt="">
+                            黑马程序员
+                            <i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>个人中心</el-dropdown-item>
+                            <el-dropdown-item>退出</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+
+                </div>
             </div>
         </el-row>
     </div>
@@ -38,6 +51,8 @@ export default {
 .container{
     height: 60px;
     box-shadow: 0 3px 3px #ccc;
+    position: relative;
+    //z-index: 999;
 }
 
 .main{
@@ -77,6 +92,14 @@ export default {
         &:hover{
             color: #fff;
         }
+    }
+}
+
+.el-dropdown-link{
+    img{
+        width:36px;
+        height:36px;
+        vertical-align: middle;
     }
 }
 </style>
