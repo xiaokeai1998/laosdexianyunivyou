@@ -71,7 +71,8 @@ export default {
                        method: "POST",
                        data: this.form
                    }).then(res => {
-                       // console.log(res.data);
+                       // 把数据保存到vuex,user是模块名字（命名空间）
+                       this.$store.commit("user/setUserInfo", res.data);
                    })
                }
            })
