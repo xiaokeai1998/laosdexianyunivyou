@@ -66,9 +66,9 @@ export default {
 .container{
     height: 60px;
     box-shadow: 0 3px 3px #ccc;
-    position: relative;
+    //position: relative;
     //z-index: 999;
-}
+}   
 
 .main{
     width: 1000px;

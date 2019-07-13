@@ -65,15 +65,8 @@ export default {
            this.$refs.form.validate(valid => {
                // 验证通过
                if(valid){
-                   // 登录的接口
-                   this.$axios({
-                       url: "/accounts/login",
-                       method: "POST",
-                       data: this.form
-                   }).then(res => {
-                       // 把数据保存到vuex,user是模块名字（命名空间）
-                       this.$store.commit("user/setUserInfo", res.data);
-                   })
+                    // 调用actions的登录方法
+                    this.$store.dispatch("user/login", this.form);
                }
            })
         }
