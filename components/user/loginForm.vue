@@ -66,7 +66,14 @@ export default {
                // 验证通过
                if(valid){
                     // 调用actions的登录方法
-                    this.$store.dispatch("user/login", this.form);
+                    this.$store.dispatch("user/login", this.form).then(res => {
+                        this.$message.success("登录成功，正在跳转...")
+
+                        setTimeout(() => {
+                            // 返回上一页
+                            this.$router.back();
+                        }, 1500);
+                    });
                }
            })
         }

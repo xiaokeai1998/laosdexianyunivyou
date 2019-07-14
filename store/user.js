@@ -44,7 +44,7 @@ export const actions = {
     login( { commit }, data){
 
         // 登录的接口
-        this.$axios({
+        return this.$axios({
             url: "/accounts/login",
             method: "POST",
             data,
@@ -54,6 +54,4 @@ export const actions = {
             commit("setUserInfo", res.data);
         })
     },
-
-    register(){}
 }
