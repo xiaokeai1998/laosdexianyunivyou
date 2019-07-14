@@ -117,14 +117,45 @@ export default {
             }
 
             // 发送手机的验证码
-            // this.
+            this.$axios({
+                url: "/captchas",
+                method: "POST",
+                data: {
+                    tel: phoneNumber
+                }
+            }).then(res => {
+                // const code = res.data.code;
+                const {code} = res.data;
+
+                this.$alert(`手机验证码是：${code}`, '提示', {
+                    confirmButtonText: '确定',
+                    type: 'warning'
+                });
+            })
 
         },
 
-
         // 注册
         handleRegSubmit(){
-           console.log(this.form)
+           this.$refs.form.validate(valid => {
+
+                if(valid){
+                   // props是除了checkPassword剩余的属性
+                   const {checkPassword, ...props} = this.form;
+
+                   // 注册接口（自行放到actions）
+                   this.$axios({
+                       url: "/accounts/register",
+                       method: "POST",
+                       data: props
+                   }).then(res => {
+                       // 把数据保存到vuex,user是模块名字（命名空间）
+                        this.$store.commit("user/setUserInfo", res.data);
+
+                        this.$router.back();
+                   })
+               }
+           })
         }
     }
 }

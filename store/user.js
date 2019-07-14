@@ -54,4 +54,7 @@ export const actions = {
             commit("setUserInfo", res.data);
         })
     },
+
+    // 注册
+    register(){}
 }
