@@ -93,8 +93,10 @@ export default {
         // cb： 回调函数，这个回调函数是必须要要调用，
         // cb函数必须要接收一个数组，数组中每一项必须是对象, 对象中必须要有value属性
         queryDepartSearch(value, cb){
-
-            if(!value) return;
+            if(!value) {
+                cb([]); // 不出现加载下拉框
+                return;
+            };
             
             // 请求推荐城市列表
             this.$axios({
@@ -106,10 +108,15 @@ export default {
                 // 推荐列表的数组
                 const {data} = res.data;
 
+                // 给数组中的对象添加value
                 const newData = data.map(v => {
                     v.value = v.name.replace("市", "");
                     return v;
-                })
+                });
+
+                // 默认选中第一个
+                this.form.departCity = newData[0].value;
+                this.form.departCode = newData[0].sort;
 
                 cb(newData)
             }) 
@@ -118,21 +125,47 @@ export default {
         // 目标城市输入框获得焦点时触发
         // value 是选中的值，cb是回调函数，接收要展示的列表
         queryDestSearch(value, cb){
-            cb([
-                {value: 1},
-                {value: 2},
-                {value: 3},
-            ]);
+            if(!value) {
+                cb([]); // 不出现加载下拉框
+                return;
+            };
+            
+            // 请求推荐城市列表
+            this.$axios({
+                url: "/airs/city", 
+                params: {
+                    name: value
+                }
+            }).then(res => {
+                // 推荐列表的数组
+                const {data} = res.data;
+
+                // 给数组中的对象添加value
+                const newData = data.map(v => {
+                    v.value = v.name.replace("市", "");
+                    return v;
+                });
+
+                // 默认选中第一个
+                this.form.destCity = newData[0].value;
+                this.form.destCode = newData[0].sort;
+
+                cb(newData)
+            });
         },
        
         // 出发城市下拉选择时触发
         handleDepartSelect(item) {
-            
+            // 赋值给form里面的对象
+            this.form.departCity = item.value;
+            this.form.departCode = item.sort;
         },
 
         // 目标城市下拉选择时触发
         handleDestSelect(item) {
-            
+            // 赋值给form里面的对象
+            this.form.destCity = item.value;
+            this.form.destCode = item.sort;
         },
 
         // 确认选择日期时触发
@@ -147,7 +180,7 @@ export default {
 
         // 提交表单是触发
         handleSubmit(){
-           
+           console.log(this.form)
         }
     },
     mounted() {

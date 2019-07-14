@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 头部组件 -->
-    <Header/>
+    <Header />
 
     <!-- 相当于router-view, 是一个页面组件的占位符 -->
     <nuxt />
@@ -22,7 +22,6 @@ export default {
   }
 }
 </script>
-
 
 <style>
 html {
