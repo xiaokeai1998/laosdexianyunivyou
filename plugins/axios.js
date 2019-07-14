@@ -13,6 +13,5 @@ export default ( { $axios } ) => {
             // 错误提示
             Message.error(message);
         }
-    })
-
+    });
 }
