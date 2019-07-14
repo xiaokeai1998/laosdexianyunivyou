@@ -64,6 +64,8 @@
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
     data(){
         return {
@@ -85,7 +87,11 @@ export default {
     methods: {
         // tab切换时触发
         handleSearchTab(item, index){
-            
+            if(index === 1){
+                this.$alert("暂时没有往返", "提示", {
+                    type: "warning"
+                })
+            }
         },
         
         // 出发城市输入值发生改变的时候触发
@@ -170,17 +176,60 @@ export default {
 
         // 确认选择日期时触发
         handleDate(value){
-           
+           this.form.departDate =  moment(value).format("YYYY-MM-DD");
         },
 
         // 触发和目标城市切换时触发
         handleReverse(){
-            
+            const {departCity, departCode, destCity, destCode} = this.form;
+
+            this.form.departCity = destCity;
+            this.form.departCode = destCode;
+
+            this.form.destCity = departCity;
+            this.form.destCode = departCode;
         },
 
         // 提交表单是触发
         handleSubmit(){
-           console.log(this.form)
+            // 验证方式很多，仅供参考
+            const rules = {
+                departCity: {
+                    value: this.form.departCity,
+                    message: "请选择出发城市"
+                },
+                destCity: {
+                    value: this.form.destCity,
+                    message: "请选择到达城市"
+                },
+                departDate: {
+                    value: this.form.departDate,
+                    message: "请选择出发日期"
+                }
+            };
+
+            // 开关作用，判断验证是否通过
+            let valid = true;
+
+            // 循环判断上面的字段是否为空
+            Object.keys(rules).forEach(v => {
+                // 判断只要有一次是空，不会在执行循环
+                if(!valid) return;
+
+                // 判断字段的值为空
+                if(!rules[v].value){
+                    valid = false;
+                    this.$message.warning( rules[v].message );
+                }
+            })
+            
+            // 跳转
+            if(valid){
+                this.$router.push({
+                    path: "/airs/flights",
+                    query: this.form
+                })
+            }
         }
     },
     mounted() {
