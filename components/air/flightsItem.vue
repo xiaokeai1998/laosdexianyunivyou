@@ -71,6 +71,7 @@ export default {
     },
 
     computed: {
+
         // 相隔时间
         rankTime(){
             const arr = this.data.arr_time; // 19:30
