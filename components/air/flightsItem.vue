@@ -56,6 +56,15 @@
 <script>
 export default {
 
+    // props: ["data"],
+
+    // 用对象的方式便于维护
+    props: {
+        data: {
+            type: Object,
+            default: {}
+        },
+    },
 }
 </script>
 
