@@ -98,66 +98,77 @@ export default {
         // value: 输入框的值
         // cb： 回调函数，这个回调函数是必须要要调用，
         // cb函数必须要接收一个数组，数组中每一项必须是对象, 对象中必须要有value属性
-        queryDepartSearch(value, cb){
-            if(!value) {
-                cb([]); // 不出现加载下拉框
-                return;
-            };
-            
-            // 请求推荐城市列表
-            this.$axios({
-                url: "/airs/city", 
-                params: {
-                    name: value
-                }
-            }).then(res => {
-                // 推荐列表的数组
-                const {data} = res.data;
+        async queryDepartSearch(value, cb){
+            // this.querySearchCity( value ).then(res => {
+            //     if(res.length > 0){
+            //         this.form.departCity = res[0].value;
+            //         this.form.departCode = res[0].sort;
+            //     }
 
-                // 给数组中的对象添加value
-                const newData = data.map(v => {
-                    v.value = v.name.replace("市", "");
-                    return v;
-                });
+            //     cb( res );
+            // });
 
-                // 默认选中第一个
-                this.form.departCity = newData[0].value;
-                this.form.departCode = newData[0].sort;
+            // await后面要接收promise对象，返回的值是resolve的参数
+            const res = await this.querySearchCity( value );
 
-                cb(newData)
-            }) 
+            if(res.length > 0){
+                this.form.departCity = res[0].value;
+                this.form.departCode = res[0].sort;
+            }
+
+            cb( res );
         },
 
         // 目标城市输入框获得焦点时触发
         // value 是选中的值，cb是回调函数，接收要展示的列表
         queryDestSearch(value, cb){
-            if(!value) {
-                cb([]); // 不出现加载下拉框
-                return;
-            };
-            
-            // 请求推荐城市列表
-            this.$axios({
-                url: "/airs/city", 
-                params: {
-                    name: value
+            // this.querySearchCity(value, cb, (arr) => {
+            //     // 默认选中第一个
+            //     this.form.destCity = arr[0].value;
+            //     this.form.destCode = arr[0].sort;
+            // });
+
+            this.querySearchCity( value ).then(res => {
+                if(res.length > 0){
+                    this.form.destCity = res[0].value;
+                    this.form.destCode = res[0].sort;
                 }
-            }).then(res => {
-                // 推荐列表的数组
-                const {data} = res.data;
 
-                // 给数组中的对象添加value
-                const newData = data.map(v => {
-                    v.value = v.name.replace("市", "");
-                    return v;
-                });
-
-                // 默认选中第一个
-                this.form.destCity = newData[0].value;
-                this.form.destCode = newData[0].sort;
-
-                cb(newData)
+                cb( res );
             });
+        },
+
+        // 封装搜索城市函数
+        querySearchCity(queryString){
+            return new Promise( (resolve, reject) => {
+                if(!queryString) {
+                    resolve([]); // 不出现加载下拉框
+                    return;
+                };
+                
+                // 请求推荐城市列表
+                this.$axios({
+                    url: "/airs/city", 
+                    params: {
+                        name: queryString
+                    }
+                }).then(res => {
+                    // 推荐列表的数组
+                    const {data} = res.data;
+
+                    // 给数组中的对象添加value
+                    const newData = data.map(v => {
+                        v.value = v.name.replace("市", "");
+                        return v;
+                    });
+
+                    // 默认选中第一个
+                    // this.form.destCity = newData[0].value;
+                    // this.form.destCode = newData[0].sort;
+
+                    resolve(newData);
+                });
+            } );
         },
        
         // 出发城市下拉选择时触发
