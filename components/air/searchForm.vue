@@ -241,6 +241,18 @@ export default {
                     query: this.form
                 })
             }
+
+            // 把当前的搜索条件存储到本地的数组中
+            const airs = JSON.parse( localStorage.getItem("airs")  ) || [];
+            airs.unshift( this.form )
+
+            // 截取只剩下5个
+            if(airs.length > 5){
+                airs.length = 5;
+            }
+
+            localStorage.setItem("airs",  JSON.stringify(airs) );
+
         }
     },
     mounted() {

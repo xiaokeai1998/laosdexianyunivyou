@@ -33,9 +33,8 @@
             </div>
 
             <!-- 侧边栏 -->
-            <div class="aside">
-                <!-- 侧边栏组件 -->
-            </div>
+            <FlightsAside/>
+
         </el-row>
     </section>
 </template>
@@ -45,6 +44,7 @@
 import FlightsListHead from "@/components/air/flightsListHead.vue"
 import FlightsItem from "@/components/air/flightsItem.vue"
 import FlightsFilters from "@/components/air/flightsFilters.vue"
+import FlightsAside from "@/components/air/flightsAside.vue"
 
 export default {
     data(){
@@ -66,6 +66,20 @@ export default {
             pageSize: 5,
             total: 0,
         }
+    },
+
+    // watch: {
+    //     // 监听路由的变化
+    //     $route(){
+    //        // 请求机票列表
+    //         this.getData();
+    //     }
+    // },
+
+    // 当前url参数发生变化时候会触发
+    beforeRouteUpdate (to, from, next) {
+        next();
+        this.getData();
     },
 
     // computed和watch的作用？有什么区别？
@@ -100,31 +114,40 @@ export default {
         // 传递给子组件用于修改数据列表的事件
         changeFlights( arr ){
             this.flightsData.flights = arr;
+        },
+
+        // 获取机票的列表
+        getData(){
+
+            this.pageIndex = 1;
+
+            // 请求机票列表
+            this.$axios({
+                url: "/airs",
+                params: this.$route.query
+            }).then(res => {
+                // 总数据，（flights, info, options, total）
+                this.flightsData = res.data;
+
+                // 下面的值赋值之后不能被修改，展开得到新的对象
+                this.cacheFlightsData = { ...res.data};
+
+                // 总条数
+                this.total = this.flightsData.flights.length;
+            })
         }
     },
 
     components: {
         FlightsListHead,
         FlightsItem,
-        FlightsFilters
+        FlightsFilters,
+        FlightsAside
     },
 
     mounted(){
-
-        // 请求机票列表
-        this.$axios({
-            url: "/airs",
-            params: this.$route.query
-        }).then(res => {
-            // 总数据，（flights, info, options, total）
-            this.flightsData = res.data;
-
-            // 下面的值赋值之后不能被修改，展开得到新的对象
-            this.cacheFlightsData = { ...res.data};
-
-            // 总条数
-            this.total = this.flightsData.flights.length;
-        })
+        // 获取机票列表数据
+        this.getData();
     }
 }
 </script>
