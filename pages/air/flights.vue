@@ -5,7 +5,7 @@
             <!-- 顶部过滤列表 -->
             <div class="flights-content">
                 <!-- 过滤条件 -->
-                <FlightsFilters :data="flightsData" @changeFlights="changeFlights"/>
+                <FlightsFilters :data="cacheFlightsData" @changeFlights="changeFlights"/>
                 
                 <!-- 航班头部布局 -->
                 <FlightsListHead/>
@@ -51,6 +51,13 @@ export default {
     data(){
         return {
             flightsData: {
+                flights: [],
+                info: {},
+                options: {} 
+            }, // 总数据
+
+            // 用于缓存大数据，一旦赋值之后不能被修改
+            cacheFlightsData: {
                 flights: [],
                 info: {},
                 options: {} 
@@ -112,6 +119,10 @@ export default {
         }).then(res => {
             // 总数据，（flights, info, options, total）
             this.flightsData = res.data;
+
+            // 下面的值赋值之后不能被修改，展开得到新的对象
+            this.cacheFlightsData = { ...res.data};
+
             // 总条数
             this.total = this.flightsData.flights.length;
         })
