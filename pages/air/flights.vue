@@ -10,7 +10,6 @@
                 <!-- 航班头部布局 -->
                 <FlightsListHead/>
                 
-                
                 <!-- 航班信息 -->
                 <FlightsItem 
                 v-for="(item, index) in dataList"

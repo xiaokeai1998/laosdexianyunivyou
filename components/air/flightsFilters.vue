@@ -93,12 +93,26 @@ export default {
     methods: {
         // 选择机场时候触发
         handleAirport(value){
-            
+            const arr = this.data.flights.filter( v => {
+                return v.org_airport_name === value;
+            } )
+
+            // 得到一个过滤后的数组，传递回去给父组件
+           this.$emit( "changeFlights", arr );
         },
 
         // 选择出发时间时候触发
         handleFlightTimes(value){
+            const [ from, to ] = value.split(",");
+
+             const arr = this.data.flights.filter( v => {
+                const [ start ] = v.dep_time.split(":");
+
+                // 判断时候需要转换为数字
+                return +from <= +start && +start < +to;
+            })
             
+            this.$emit( "changeFlights", arr );
         },
 
          // 选择航空公司时候触发
@@ -108,7 +122,7 @@ export default {
             } )
 
             // 得到一个过滤后的数组，传递回去给父组件
-           this.$emit("changeFlights", arr)
+           this.$emit( "changeFlights", arr );
         },
 
          // 选择机型时候触发
