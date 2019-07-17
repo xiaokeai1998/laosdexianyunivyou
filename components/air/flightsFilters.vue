@@ -127,12 +127,22 @@ export default {
 
          // 选择机型时候触发
         handleAirSize(value){
-           
+           const arr = this.data.flights.filter( v => {
+                return v.plane_size === value;
+            } )
+
+            // 得到一个过滤后的数组，传递回去给父组件
+           this.$emit( "changeFlights", arr );
         },
         
         // 撤销条件时候触发
         handleFiltersCancel(){
-            
+            this.airport = "";       // 机场
+            this.flightTimes = "";    // 出发时间
+            this.company = "";       // 航空公司
+            this.airSize = "";       // 机型大小
+          
+            this.$emit( "changeFlights",    this.data.flights);
         },
     }
 }

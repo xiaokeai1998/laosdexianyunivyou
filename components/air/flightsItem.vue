@@ -46,11 +46,14 @@
                             ￥{{ item.org_settle_price }}
                         </el-col>
                         <el-col :span="3" class="choose-button">
+
                             <el-button 
+                            @click="handleToOrder( data.id,   item.seat_xid )"
                             type="warning" 
                             size="mini">
                             选定
                             </el-button>
+
                             <p>剩余：{{item.discount}}</p>
                         </el-col>
                     </el-row>
@@ -102,6 +105,19 @@ export default {
             default: {}
         },
     },
+
+    methods: {
+        // 跳转到订单页
+        handleToOrder( id, seat_xid ){
+            this.$router.push({
+                path: "/air/order",
+                query: {
+                    id,
+                    seat_xid
+                }
+            })
+        }
+    }
 }
 </script>
 
