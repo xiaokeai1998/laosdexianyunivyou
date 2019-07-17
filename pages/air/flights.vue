@@ -5,9 +5,7 @@
             <!-- 顶部过滤列表 -->
             <div class="flights-content">
                 <!-- 过滤条件 -->
-                <div>
-                    
-                </div>
+                <FlightsFilters :data="flightsData"/>
                 
                 <!-- 航班头部布局 -->
                 <FlightsListHead/>
@@ -47,14 +45,16 @@
 
 import FlightsListHead from "@/components/air/flightsListHead.vue"
 import FlightsItem from "@/components/air/flightsItem.vue"
+import FlightsFilters from "@/components/air/flightsFilters.vue"
 
 export default {
     data(){
         return {
             flightsData: {
-                flights: []
+                flights: [],
+                info: {},
+                options: {} 
             }, // 总数据
-            dataList: [], // 只负责页面渲染的数组
 
             pageIndex: 1,
             pageSize: 5,
@@ -69,20 +69,14 @@ export default {
 
     // 监听和计算, 监听函数内部引用实例属性的变化，
     // 只要有一个属性发生了变化，函数会重新计算并且返回新的值
-    // computed: {
-    //     dataList(){
-    //         return this.flightsData.flights.slice(
-    //             (this.pageIndex - 1) * this.pageSize,
-    //             this.pageIndex * this.pageSize
-    //         );
-    //     }
-    // },
-
-    // watch可以监听实例属性的变化
-    // watch: {
-    //     $route(){
-    //     }
-    // },
+    computed: {
+        dataList(){
+            return this.flightsData.flights.slice(
+                (this.pageIndex - 1) * this.pageSize,
+                this.pageIndex * this.pageSize
+            );
+        }
+    },
 
     methods: {
         // 切换条数时候触发
@@ -90,35 +84,18 @@ export default {
             this.pageSize = value;
             // 重新回到第一页
             this.pageIndex = 1;
-
-            // 设置显示数据列表
-            this.setDataList();
         },
 
         // 页数切换时候触发
         handleCurrentChange(value){
             this.pageIndex = value;
-            
-            // 设置显示数据列表
-            this.setDataList();
         },
-
-        // 设置显示数据列表
-        setDataList(){
-            // 截图当前页面显示数据
-            // 0,5
-            // 5, 10
-            // 10, 15
-            this.dataList = this.flightsData.flights.slice(
-                (this.pageIndex - 1) * this.pageSize,
-                this.pageIndex * this.pageSize
-            );
-        }
     },
 
     components: {
         FlightsListHead,
-        FlightsItem
+        FlightsItem,
+        FlightsFilters
     },
 
     mounted(){
@@ -132,9 +109,6 @@ export default {
             this.flightsData = res.data;
             // 总条数
             this.total = this.flightsData.flights.length;
-
-            // 第一页的数据
-            this.setDataList();
         })
     }
 }
