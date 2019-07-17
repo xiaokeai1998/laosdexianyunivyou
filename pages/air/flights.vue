@@ -5,7 +5,7 @@
             <!-- 顶部过滤列表 -->
             <div class="flights-content">
                 <!-- 过滤条件 -->
-                <FlightsFilters :data="flightsData"/>
+                <FlightsFilters :data="flightsData" @changeFlights="changeFlights"/>
                 
                 <!-- 航班头部布局 -->
                 <FlightsListHead/>
@@ -90,6 +90,11 @@ export default {
         handleCurrentChange(value){
             this.pageIndex = value;
         },
+
+        // 传递给子组件用于修改数据列表的事件
+        changeFlights( arr ){
+            this.flightsData.flights = arr;
+        }
     },
 
     components: {
