@@ -185,14 +185,19 @@ export default {
                 air: this.$route.query.id
             }
 
-
             // 提交订单
             this.$axios({
                 url: "/airorders",
                 method: "POST",
-                data
+                data,
+                headers: {
+                    // token规范来自于JWT
+                    Authorization: `Bearer ${ this.$store.state.user.userInfo.token }`
+                }
             }).then(res => {
-                console.log(res.data)
+                const {message} = res.data;
+
+                this.$message.success( message  )
             })
         }
     }
