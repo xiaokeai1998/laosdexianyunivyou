@@ -32,7 +32,7 @@
         <el-row type="flex" justify="space-between" class="info-bar">
             <span>成人机票</span>
             <span>￥{{data.seat_infos.org_settle_price}}</span>
-            <span>x1</span>
+            <span>x{{ Math.floor( $store.state.air.allPrice /  data.seat_infos.org_settle_price) }}</span>
         </el-row>
         <el-row type="flex" justify="space-between" class="info-bar">
             <span>机建＋燃油</span>

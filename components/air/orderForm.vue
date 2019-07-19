@@ -121,7 +121,21 @@ export default {
 
     computed: {
         allPrice(){
-            let price = 123;
+            let price = 0;
+
+            if(!this.infoData.airport_tax_audlet)  return 0;
+
+            // 机票单价
+            price += this.infoData.seat_infos.org_settle_price;
+
+            // 基建燃油费
+            price += this.infoData.airport_tax_audlet;
+
+            // 保险
+            price += this.insurances.length * 30;
+
+            // 人数
+            price *= this.users.length;
 
             this.$store.commit("air/setAllPrice", price);
         }
