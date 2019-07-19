@@ -148,6 +148,12 @@ export default {
         // 发送手机验证码
         handleSendCaptcha(){
             
+            this.$store.dispatch("user/sendCode", this.contactPhone).then( code => {
+                this.$alert(`手机验证码是：${code}`, '提示', {
+                    confirmButtonText: '确定',
+                    type: 'warning'
+                });
+            } )
         },
 
         // 选中保险时候触发
@@ -180,7 +186,14 @@ export default {
             }
 
 
-            console.log(data)
+            // 提交订单
+            this.$axios({
+                url: "/airorders",
+                method: "POST",
+                data
+            }).then(res => {
+                console.log(res.data)
+            })
         }
     }
 }

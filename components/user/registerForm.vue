@@ -116,7 +116,7 @@ export default {
                 return;
             }
 
-            // 发送手机的验证码
+            // 发送手机的验证码 ( 已经封装到store/user/sendCode )
             this.$axios({
                 url: "/captchas",
                 method: "POST",

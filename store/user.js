@@ -56,5 +56,23 @@ export const actions = {
     },
 
     // 注册
-    register(){}
+    register(){},
+
+    // 发送手机验证码
+    sendCode( store,  phoneNumber ){
+
+        // 发送手机的验证码
+        return this.$axios({
+            url: "/captchas",
+            method: "POST",
+            data: {
+                tel: phoneNumber
+            }
+        }).then(res => {
+            // const code = res.data.code;
+            const {code} = res.data;
+
+            return code;
+        })
+    }
 }
