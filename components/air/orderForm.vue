@@ -172,6 +172,40 @@ export default {
 
         // 提交订单
         handleSubmit(){
+
+            // 判断状态的对象
+            const rules = {
+                users: {
+                    value: this.users[0].username && this.users[0].id,
+                    message: "乘机人不能为空"
+                },
+                contactName: {
+                    value: this.contactName,
+                    message: "请输入联系人"
+                },
+                contactPhone: {
+                    value: this.contactPhone,
+                    message: "请输入手机号码"
+                },
+                captcha: {
+                    value: this.captcha,
+                    message: "请输入验证码"
+                }
+            };
+
+
+            // 循环判断验证是否通过
+            let valid = true;
+            Object.keys( rules ).forEach( v=> {
+                if(!valid) return;
+
+                if( !rules[v].value ){
+                    valid = false;
+                    this.$message.warning( rules[v].message  );
+                }
+            } )
+
+            if(!valid) return;
         
             const data = {
                 users: this.users,
