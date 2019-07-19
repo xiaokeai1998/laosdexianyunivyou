@@ -114,11 +114,14 @@ export default {
         // 传递给子组件用于修改数据列表的事件
         changeFlights( arr ){
             this.flightsData.flights = arr;
+            // 重新返回第一页
+            this.pageIndex = 1;
+            // 总条数
+            this.total = this.flightsData.flights.length;
         },
 
         // 获取机票的列表
         getData(){
-
             this.pageIndex = 1;
 
             // 请求机票列表

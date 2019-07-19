@@ -105,9 +105,9 @@ export default {
 
         // 选择出发时间时候触发
         handleFlightTimes(value){
-            const [ from, to ] = value.split(",");
+            const [ from, to ] = value.split(","); // 6 12 -> 20
 
-             const arr = this.data.flights.filter( v => {
+            const arr = this.data.flights.filter( v => {
                 const [ start ] = v.dep_time.split(":");
 
                 // 判断时候需要转换为数字
