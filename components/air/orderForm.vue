@@ -89,6 +89,8 @@
                 <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
             </div>
         </div>
+
+        <input type="hidden" :value="allPrice"/>
     </div>
 </template>
 
@@ -115,6 +117,14 @@ export default {
                 insurances: []
             }, // 机票信息数据
         }   
+    },
+
+    computed: {
+        allPrice(){
+            let price = 123;
+
+            this.$store.commit("air/setAllPrice", price);
+        }
     },
 
     mounted(){

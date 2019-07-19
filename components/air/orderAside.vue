@@ -41,7 +41,7 @@
         </el-row>
         <el-row type="flex" justify="space-between" align="middle" class="info-bar">
             <span>应付总额：</span>
-            <span class="price">￥ </span>
+            <span class="price">￥ {{ $store.state.air.allPrice }}</span>
         </el-row>           
     </div>
 </template>
@@ -57,6 +57,10 @@ export default {
         }
     },
 
+    mounted(){
+        // console.log( this.$store.state.air )
+    },
+
     computed: {
         rankTime(){
 
@@ -68,7 +72,7 @@ export default {
             
             // 是凌晨
            if( arr[0] < dep[0] ) {
-               arr[0] += 24;
+               arr[0] =  +arr[0]  + 24;
            }
 
             const end = arr[0] * 60 + +arr[1];
@@ -79,7 +83,6 @@ export default {
             const min = dis % 60;
 
             return `${ hours }小时${ min }分钟`
-
         }
     },
 }
