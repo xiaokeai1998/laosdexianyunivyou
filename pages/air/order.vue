@@ -5,8 +5,8 @@
             <!-- <OrderForm @setInfoData="setInfoData"/> -->
             <OrderForm/>
 
-            <!-- 侧边栏 -->
-            <OrderAside :data=" $store.state.air.infoData" />
+            <!-- 侧边栏  -->
+            <OrderAside :data="$store.state.air.infoData" />
         </el-row>
     </div>
 </template>

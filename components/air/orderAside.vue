@@ -59,25 +59,27 @@ export default {
 
     computed: {
         rankTime(){
-            // 数据还未请求回来
-            if(!this.data.dep_time) return "";
 
-            // 转化为分钟
+            if(!this.data.arr_time) return "";
+
+            // 第0项是小时， 第一项是分钟
+            const  arr = this.data.arr_time.split(":");
             const dep = this.data.dep_time.split(":");
-            const arr = this.data.arr_time.split(":");
-            const depVal = dep[0] * 60 + +dep[1];
-            const arrVal = arr[0] * 60 + +arr[1];
+            
+            // 是凌晨
+           if( arr[0] < dep[0] ) {
+               arr[0] += 24;
+           }
 
-            // 到达时间相减得到分钟
-            let dis = arrVal - depVal;
+            const end = arr[0] * 60 + +arr[1];
+            const start = dep[0] *  60 + +dep[1];
 
-            // 如果是第二天凌晨时间段，需要加24小时
-            if(dis < 0){
-                dis = arrVal + 24 * 60 - depVal;
-            }
+            const dis = end - start;
+            const hours = Math.floor(dis / 60);
+            const min = dis % 60;
 
-            // 得到相差时间
-            return `${ Math.floor(dis / 60)}时${dis % 60}分`
+            return `${ hours }小时${ min }分钟`
+
         }
     },
 }
