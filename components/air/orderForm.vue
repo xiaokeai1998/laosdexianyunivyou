@@ -3,10 +3,19 @@
         <div class="air-column">
             <h2>剩机人</h2>
             <el-form class="member-info">
-                <div class="member-info-item" >
+
+                <!-- 需要循环的乘机人列表结构 -->
+                <div 
+                class="member-info-item" 
+                v-for="(item, index) in users"
+                 :key="index">
 
                     <el-form-item label="乘机人类型">
-                        <el-input placeholder="姓名" class="input-with-select">
+                        <el-input 
+                        placeholder="姓名" 
+                        class="input-with-select" 
+                        v-model="users[index].username">
+
                             <el-select 
                             slot="prepend" 
                             value="1" 
@@ -18,7 +27,10 @@
 
                     <el-form-item label="证件类型">
                         <el-input 
-                        placeholder="证件号码"  class="input-with-select">
+                        placeholder="证件号码"  
+                        class="input-with-select"  
+                        v-model="users[index].id">
+
                             <el-select 
                             slot="prepend" 
                             value="1"           
@@ -28,8 +40,10 @@
                         </el-input>
                     </el-form-item>
 
-                    <span class="delete-user" @click="handleDeleteUser()">-</span>
+                    <span class="delete-user" @click="handleDeleteUser(index)">-</span>
                 </div>
+                <!-- 需要循环的乘机人列表结构  end-->
+
             </el-form>
 
             <el-button class="add-member" type='primary' @click="handleAddUsers">添加乘机人</el-button>
@@ -38,11 +52,16 @@
         <div class="air-column">
             <h2>保险</h2>
             <div>
-                <div class="insurance-item">
+                <div class="insurance-item" 
+                v-for="(item, index) in infoData.insurances"
+                :key="index">
+
                     <el-checkbox 
-                    label="航空意外险：￥30/份×1  最高赔付260万" 
+                    :label="`${item.type}：￥${ item.price }/份×1  最高赔付${ item.compensation }`" 
+                    @change="changeInsurances( item )"
                     border>
                     </el-checkbox> 
+
                 </div>
             </div>
         </div>
@@ -52,11 +71,11 @@
             <div class="contact">
                 <el-form label-width="60px">
                     <el-form-item label="姓名">
-                        <el-input></el-input>
+                        <el-input v-model="contactName"></el-input>
                     </el-form-item>
 
                     <el-form-item label="手机">
-                        <el-input placeholder="请输入内容">
+                        <el-input placeholder="请输入内容" v-model="contactPhone">
                             <template slot="append">
                             <el-button @click="handleSendCaptcha">发送验证码</el-button>
                             </template>
@@ -64,7 +83,7 @@
                     </el-form-item>
 
                     <el-form-item label="验证码">
-                        <el-input></el-input>
+                        <el-input v-model="captcha"></el-input>
                     </el-form-item>
                 </el-form>   
                 <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
@@ -75,15 +94,55 @@
 
 <script>
 export default {
+    data(){
+        return {
+            users: [
+                {
+                    username: "",
+                    id: ""
+                }
+             ],                 // 用户集合
+            insurances: [ ],        // 保险id的集合
+            contactName: "",    // 联系人
+            contactPhone: "",   // 联系人的手机号码
+            invoice: false,         // 是否需要发票
+            captcha: "",            // 验证码 （注意下接口文档没有说明）
+
+            seat_xid: "",           // 座位id （来自于参数）
+            air: "",                   // 航班id （来自于参数）
+
+            infoData: {
+                insurances: []
+            }, // 机票信息数据
+        }   
+    },
+
+    mounted(){
+        const {id, seat_xid} = this.$route.query;
+
+        this.$axios({
+            url: "/airs/" + id,
+            params: {
+                seat_xid
+            }
+        }).then(res => {
+            // 当前机票订单的信息数据
+            this.infoData = res.data;
+        })
+    },
+
     methods: {
         // 添加乘机人
         handleAddUsers(){
-            
+            this.users.push({
+                    username: "",
+                    id: ""
+            })
         },
         
         // 移除乘机人
-        handleDeleteUse(){
-
+        handleDeleteUser( index ){
+            this.users.splice( index, 1 );
         },
         
         // 发送手机验证码
@@ -91,9 +150,37 @@ export default {
             
         },
 
+        // 选中保险时候触发
+        changeInsurances( item  ){
+
+            // 判断数组中是否已经存在该id
+            const index = this.insurances.indexOf(item.id) ;
+            if( index > -1  ){
+                // 删除
+                 this.insurances.splice( index, 1 )
+            }else{
+                // 修改data中Insurances的值
+                this.insurances.push(item.id )
+            }
+        },
+
         // 提交订单
         handleSubmit(){
-            
+        
+            const data = {
+                users: this.users,
+                insurances: this.insurances,
+                contactName: this.contactName,
+                contactPhone: this.contactPhone,
+                invoice: false,
+                captcha: this.captcha,
+
+                seat_xid: this.$route.query.seat_xid,
+                air: this.$route.query.id
+            }
+
+
+            console.log(data)
         }
     }
 }
