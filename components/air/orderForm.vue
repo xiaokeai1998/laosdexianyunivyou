@@ -128,6 +128,8 @@ export default {
         }).then(res => {
             // 当前机票订单的信息数据
             this.infoData = res.data;
+
+            this.$emit("setInfoData",  this.infoData);
         })
     },
 
@@ -192,7 +194,6 @@ export default {
                     message: "请输入验证码"
                 }
             };
-
 
             // 循环判断验证是否通过
             let valid = true;
