@@ -129,7 +129,11 @@ export default {
             // 当前机票订单的信息数据
             this.infoData = res.data;
 
-            this.$emit("setInfoData",  this.infoData);
+            // 把值存到store
+            this.$store.commit("air/setInfoData",  this.infoData)
+
+            // 传递给父组件
+            //this.$emit("setInfoData",  this.infoData);
         })
     },
 
