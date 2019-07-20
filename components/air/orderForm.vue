@@ -258,9 +258,12 @@ export default {
                     Authorization: `Bearer ${ this.$store.state.user.userInfo.token }`
                 }
             }).then(res => {
-                const {message} = res.data;
+                const {message, data} = res.data;
 
-                this.$message.success( message  )
+                this.$message.success( message  );
+
+                //  跳转到付款页
+                this.$router.push("/air/pay?id=" + data.id);
             })
         }
     }
