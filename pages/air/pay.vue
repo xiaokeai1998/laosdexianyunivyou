@@ -33,7 +33,35 @@ import QRCode from "qrcode";
 export default {
     data(){
         return {
-            info:{}
+            info:{},
+            timer: null
+        }
+    },
+
+    methods: {
+        // 查询付款状态
+        isPay( data ){
+            return this.$axios({
+                url: "/airorders/checkpay",
+                method: "POST",
+                data: {
+                    id:  data.id,
+                    nonce_str: data.price,
+                    out_trade_no: data.orderNo,
+                },
+                headers: {
+                    // token规范来自于JWT
+                    Authorization: `Bearer ${ this.$store.state.user.userInfo.token }`
+                }
+            }).then(res =>{
+               const {statusTxt}  = res.data;
+
+               if(statusTxt === "支付完成"){
+                    return true;
+               }else{
+                   return false;
+               }
+            })
         }
     },
     mounted(){
@@ -51,11 +79,28 @@ export default {
             }).then(res => { 
                 this.info = res.data;
 
-                QRCode.toCanvas(canvas, this.info.payInfo.code_url);
-            })
-        }, 1)
-        
+                QRCode.toCanvas(canvas, this.info.payInfo.code_url, {
+                    width: 200
+                });
 
+                // 查询付款的状态
+                this.timer = setInterval( async v => { 
+                    const pay = await this.isPay(this.info);
+
+                    // 如果是true付款成功
+                    if( pay ){
+                        this.$message.success(" 订单支付成功");
+                        clearInterval(this.timer);
+                        return;
+                    } 
+                }, 3000);
+            })
+        }, 1);
+    },
+
+    // 组件销毁时候触发的生命周期
+    destroyed(){
+        clearInterval(this.timer);
     }
 }
 </script>

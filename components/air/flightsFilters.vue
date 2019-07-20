@@ -80,7 +80,11 @@ export default {
                 { type: "小", size: "S" } ,
             ],
 
-            filtersList: {}
+            // 多选的条件
+            filters: {
+                company: { value: "", key: "airline_name" },
+                airSize: { value: "", key: "plane_size" }
+            }
         }
     },
 
@@ -93,6 +97,28 @@ export default {
     },
 
     methods: {
+        // 多选的判断条件
+        handleFilters(){
+            const arr = this.data.flights.filter( v => {
+                let pass = true;
+
+               // 多个条件
+               Object.keys( this.filters).forEach( item => {
+
+                   if(  !this.filters[ item ].value ) return;
+
+                   // 机票数据v能不能同时满足条件
+                    if( v[ this.filters[ item ].key ] !== this.filters[ item ].value ){
+                        pass = false;
+                    }
+               } );
+
+               return pass;
+            } )
+
+            return arr;
+        },
+
         // 选择机场时候触发
         handleAirport(value){
             const arr = this.data.flights.filter( v => {
@@ -120,22 +146,29 @@ export default {
          // 选择航空公司时候触发
         handleCompany(value){
 
-            const arr = this.data.flights.filter( v => {
-                return v.airline_name === value;
-            } )
+            // const arr = this.data.flights.filter( v => {
+            //     return v.airline_name === value;
+            // } )
+
+            this.filters.company.value = value;
+
+            const arr = this.handleFilters();
 
             // 得到一个过滤后的数组，传递回去给父组件
            this.$emit( "changeFlights", arr );
 
-           
         },
 
          // 选择机型时候触发
         handleAirSize(value){
 
-             const arr = this.data.flights.filter( v => {
-                return v.plane_size === value;
-            } )      
+            //  const arr = this.data.flights.filter( v => {
+            //     return v.plane_size === value;
+            // } )      
+
+             this.filters.airSize.value = value;
+
+             const arr = this.handleFilters();
 
             // 得到一个过滤后的数组，传递回去给父组件
            this.$emit( "changeFlights", arr );
