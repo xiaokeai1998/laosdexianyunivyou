@@ -11,8 +11,10 @@
                 align="middle"
                 class="pay-qrcode">
                     <div class="qrcode">
+
                         <!-- 二维码 -->
                         <canvas id="qrcode-stage"></canvas>
+
                         <p>请使用微信扫一扫</p>
                         <p>扫描二维码支付</p>
                     </div>
@@ -26,6 +28,8 @@
 </template>
 
 <script>
+import QRCode from "qrcode";
+
 export default {
     data(){
         return {
@@ -34,6 +38,7 @@ export default {
     },
     mounted(){
         const { id } = this.$route.query;
+        const canvas = document.getElementById('qrcode-stage')
 
         // 等待本地存储赋值完成后再执行
         setTimeout(() => {
@@ -45,6 +50,8 @@ export default {
                 }
             }).then(res => { 
                 this.info = res.data;
+
+                QRCode.toCanvas(canvas, this.info.payInfo.code_url);
             })
         }, 1)
         
