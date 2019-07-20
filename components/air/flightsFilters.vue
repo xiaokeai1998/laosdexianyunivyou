@@ -108,14 +108,13 @@ export default {
                    if(  !this.filters[ item ].value ) return;
 
                    // 机票数据v能不能同时满足条件
-                    if( v[ this.filters[ item ].key ] !== this.filters[ item ].value ){
+                    if( v[ this.filters[ item ].key ]  !== this.filters[ item ].value ){
                         pass = false;
                     }
                } );
 
                return pass;
             } )
-
             return arr;
         },
 
